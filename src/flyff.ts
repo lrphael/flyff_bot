@@ -20,6 +20,8 @@ class App {
     private timer_key_counter = new Map();
     private key_counter = 0;
     private isFocused = false;
+    private targetAnimationRunning = false;
+    private targetInterval: Interval | null = null;
 
     constructor() {
         const container = html.toElement(html.container)!;
@@ -75,13 +77,19 @@ class App {
             this.canvas.focus();
         });
 
-        const target = <HTMLInputElement>html.get(`#cheats_target`);
-        target.addEventListener("pointerdown", async () => {
-            target.classList.remove("btn-primary");
-            target.classList.add("btn-secondary");
-            await this.searchTarget();
-            target.classList.remove("btn-secondary");
-            target.classList.add("btn-primary");
+        const targetButton = <HTMLInputElement>html.get(`#cheats_target`);
+        targetButton.addEventListener("pointerdown", async () => {
+            if (this.targetAnimationRunning) {
+                this.stopTarget();
+                targetButton.innerText = "Target";
+                targetButton.classList.remove("btn-secondary");
+                targetButton.classList.add("btn-primary");
+            } else {
+                this.startTarget();
+                targetButton.innerText = "Stop Target";
+                targetButton.classList.remove("btn-primary");
+                targetButton.classList.add("btn-secondary");
+            }
         });
 
         this.create2DCanvas();
@@ -345,6 +353,34 @@ class App {
         );
     }
 
+    private async startTarget() {
+        this.targetAnimationRunning = true;
+        const targetButton = <HTMLInputElement>html.get(`#cheats_target`);
+
+        const executeSearchTarget = async () => {
+            if (!this.targetAnimationRunning) return;
+            targetButton.classList.remove("btn-primary");
+            targetButton.classList.add("btn-secondary");
+            await this.searchTarget();
+            if (this.targetAnimationRunning) {
+                this.targetInterval = setTimeout(executeSearchTarget, 500);
+            }
+        };
+
+        executeSearchTarget();
+    }
+
+    private stopTarget() {
+        this.targetAnimationRunning = false;
+        if (this.targetInterval) {
+            clearTimeout(this.targetInterval);
+            this.targetInterval = null;
+        }
+        const targetButton = <HTMLInputElement>html.get(`#cheats_target`);
+        targetButton.classList.remove("btn-secondary");
+        targetButton.classList.add("btn-primary");
+    }
+
     private searchTarget() {
         const width = window.innerWidth;
         const height = window.innerHeight;
@@ -373,6 +409,8 @@ class App {
                 this.ctx2D.beginPath();
 
                 for (let angle = 0.01; angle < 72; angle += 0.01) {
+                    if (!this.targetAnimationRunning) break;
+
                     x2 = centerX + (10 + 5 * angle) * Math.cos(angle);
                     y2 = centerY + (10 + 5 * angle) * Math.sin(angle);
 
@@ -414,6 +452,7 @@ class App {
             cast: number;
         }
     ) {
+        if (!this.targetAnimationRunning) return;
         target.classList.remove("btn-primary");
         target.classList.add("btn-secondary");
 
