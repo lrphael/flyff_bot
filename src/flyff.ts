@@ -62,6 +62,9 @@ class App {
         const button2 = <HTMLInputElement>html.get(`#cheats_add_key`);
         button2.addEventListener("pointerdown", this.createKey.bind(this));
 
+        const infoButton = <HTMLInputElement>html.get(`#cheats_info`);
+        infoButton.addEventListener("pointerdown", this.toggleInfo.bind(this));
+
         container.addEventListener("pointerdown", () => {
             this.isFocused = true;
         });
@@ -451,6 +454,17 @@ class App {
 
         this.canvas2D = canvas;
         this.ctx2D = canvas.getContext("2d")!;
+    }
+
+    private toggleInfo() {
+        const infoSection = document.getElementById("info_section");
+        if (infoSection) {
+            if (infoSection.style.display === "none") {
+                infoSection.style.display = "block";
+            } else {
+                infoSection.style.display = "none";
+            }
+        }
     }
 }
 

@@ -63,7 +63,29 @@ export const container = `<div id="cheats_container" style="${cheats_container_s
         </div>
         <button id="cheats_target" class="btn btn-primary" type="button" style="margin: 5px;">Target</button>
         <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#cheats_collapse" aria-expanded="false" aria-controls="collapse_cheats" style="margin: 5px;">Cheats</button>
-        <a id="cheats_upgrade" name="v${version}" href="#" style="text-align: center;">v${version}</a>    
+        <button id="cheats_info" class="btn btn-primary" type="button" style="margin: 5px;">Info</button>
+        <div id="info_section" style="display:none; margin-top: 10px; text-align: left;">
+            <h5>Explanation of Features:</h5>
+            <ul>
+                <li><strong>Key:</strong> Adds a new key entry with the following options:
+                    <ul>
+                        <li><strong>Interval:</strong> Sets the interval in milliseconds between key presses.</li>
+                        <li><strong>Casting:</strong> Sets the casting time in milliseconds for the key press.</li>
+                        <li><strong>Key:</strong> Specifies the key to be pressed.</li>
+                    </ul>
+                </li>
+                <li><strong>Timeline:</strong> Adds a new timeline entry with the following options:
+                    <ul>
+                        <li><strong>Settings:</strong> Opens settings to configure the timeline.</li>
+                        <li><strong>Key:</strong> Adds a key action to the timeline.</li>
+                        <li><strong>Click:</strong> Adds a click action to the timeline.</li>
+                        <li><strong>Interval:</strong> Sets the interval in milliseconds between actions.</li>
+                    </ul>
+                </li>
+                <li><strong>Target:</strong> Searches for a target on the screen and simulates a click on it.</li>
+            </ul>
+        </div>
+        <a id="cheats_upgrade" name="v${version}" href="#" style="text-align: center;">v${version}</a>
     </div>
 </div>`;
 
@@ -78,7 +100,6 @@ export const collapseTimeline = (id: number) => `
         <button id="timeline_${id}_add" class="btn btn-primary" type="button">Key</button>
         <button id="timeline_${id}_add_click" class="btn btn-primary" type="button">Click</button>
         <input id="timeline_${id}_time" type="string" class="form-control" placeholder="interval" aria-label="Interval" style="width: 70px; padding: 3px;">
-        <button id="timeline_${id}_remove" type="button" class="btn btn-secondary" aria-label="Close" data-block-id="timeline_${id}">x</button>
     </div>
 </div>`;
 
@@ -91,7 +112,6 @@ export const input_key_group = (id: number) => `
         <input id="input_${id}_time" type="string" class="form-control" placeholder="interval" aria-label="Interval" style="width: 70px; padding: 3px;">
         <input id="input_${id}_cast" type="string" class="form-control" placeholder="casting" aria-label="Casting" style="width: 70px; padding: 3px;">
         <input id="input_${id}_key" type="string" class="form-control" placeholder="key" aria-label="Key" style="width: 55px; padding: 3px;">
-        <button id="input_${id}_remove" type="button" class="btn btn-secondary" aria-label="Close" data-block-id="input_${id}">x</button>
     </div>
 </div>
 `;
