@@ -63,23 +63,10 @@ async function searchTarget(app: any) {
 
     let done = false;
     let [x, x2, y, y2] = [centerX, centerX, centerY, centerY];
-    let radius = 0;
-    const maxRadius = width / 4;
 
     const time = new Date().getTime();
-    let targetFound = false;
-    let targetFoundCounter = 0;
 
     return new Promise((resolve) => {
-        // app.input.cursorMutation = () => {
-        //     if (!canvasActive) return;
-        //     app.input.mouseClickEmmit(x, y);
-        //     targetFound = true;
-        //     app.input.cursorMutation = new Function();
-
-        //     (window as any).timeout = new Date().getTime() - time;
-        //     resolve(true);
-        // };
         app.input.cursorMutation = () => {
             app.input.mouseClickEmmit(x, y);
             done = true;
@@ -91,53 +78,6 @@ async function searchTarget(app: any) {
         };
 
         (async () => {
-            // while (!done && app.targetAnimationRunning) {
-            //     if (!canvasActive) {
-            //         done = true;
-            //         break;
-            //     }
-            //     app.ctx2D.clearRect(0, 0, width, height);
-            //     app.ctx2D.moveTo(centerX, centerY);
-            //     app.ctx2D.beginPath();
-            //     radius += 10;
-            //     if (radius > maxRadius) {
-            //         radius = 10;
-            //     }
-            //     const steps = 36;
-            //     for (let i = 0; i < steps; i++) {
-            //         if (!canvasActive) {
-            //             done = true;
-            //             break;
-            //         }
-            //         const angle = (i * 2 * Math.PI) / steps;
-            //         x2 = centerX + radius * Math.cos(angle);
-            //         y2 = centerY + radius * Math.sin(angle);
-            //         if (x2 < 0 || y2 < 0 || x2 > width || y2 > height) continue;
-            //         app.ctx2D.arc(x2, y2, 3, 0, 2 * Math.PI);
-            //         app.ctx2D.strokeStyle = "#fff";
-            //         app.ctx2D.stroke();
-            //         [x, y] = [x2, y2];
-            //         await app.input.mouseMoveEmmit(x, y);
-            //         if (done) break;
-            //         if (targetFound) {
-            //             targetFoundCounter++;
-            //             if (targetFoundCounter >= 2) {
-            //                 done = true;
-            //                 app.lastTargetDetectionTime = new Date().getTime();
-            //                 break;
-            //             }
-            //         }
-            //     }
-            //     if (done) break;
-            //     app.ctx2D.closePath();
-            //     await timer(10);
-            // }
-            // if (canvasActive) {
-            //     app.ctx2D.clearRect(0, 0, width, height);
-            // }
-            // app.input.cursorMutation = new Function();
-            // resolve(done);
-
             app.ctx2D.clearRect(0, 0, width, height);
             app.ctx2D.moveTo(centerX, centerY);
             app.ctx2D.beginPath();
