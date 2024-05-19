@@ -7,18 +7,18 @@
  */
 function injectScript(file_path, tag) {
     var node = document.getElementsByTagName(tag)[0];
-    var script = document.createElement('script');
-    script.setAttribute('type', 'text/javascript');
-    script.setAttribute('src', file_path);
+    var script = document.createElement("script");
+    script.setAttribute("type", "text/javascript");
+    script.setAttribute("src", file_path);
     node.appendChild(script);
 }
 
 let url;
 
 try {
-    url = browser.extension.getURL('flyff.js');
+    url = browser.extension.getURL("main.js");
 } catch (err) {
-    url = chrome.runtime.getURL('flyff.js');
+    url = chrome.runtime.getURL("main.js");
 }
 
-injectScript(url, 'body');
+injectScript(url, "body");

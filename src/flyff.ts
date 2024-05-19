@@ -22,6 +22,10 @@ class App {
     private isFocused = false;
     private targetAnimationRunning = false;
     private targetInterval: Interval | null = null;
+    private defeatedEnemies = 0;
+    private lastTargetDetectionTime: number | null = null;
+    private detectionTimeout: ReturnType<typeof setTimeout> | null = null;
+    private isAttacking = false;
 
     constructor() {
         const container = html.toElement(html.container)!;
@@ -78,7 +82,7 @@ class App {
         });
 
         const targetButton = <HTMLInputElement>html.get(`#cheats_target`);
-        targetButton.addEventListener("pointerdown", async () => {
+        targetButton.addEventListener("pointerdown", () => {
             if (this.targetAnimationRunning) {
                 this.stopTarget();
                 targetButton.innerText = "Target";
@@ -93,6 +97,7 @@ class App {
         });
 
         this.create2DCanvas();
+        this.input.cursorMutation = this.detectEnemy.bind(this);
     }
 
     private createTimer() {
@@ -121,7 +126,7 @@ class App {
         const removeButton = <HTMLInputElement>(
             html.get(`#timeline_${timer_counter_save}_remove`)
         );
-        removeButton.addEventListener("click", function() {
+        removeButton.addEventListener("click", function () {
             const parentElement = this.closest(`[id^="input_timeline_"]`);
             if (parentElement) {
                 parentElement.remove();
@@ -324,9 +329,9 @@ class App {
         });
 
         const removeButton = <HTMLInputElement>(
-            html.get(`#input_${key_counter_save}_remove`)
+            html.get(`#input_key_${key_counter_save}_remove`)
         );
-        removeButton.addEventListener("click", function() {
+        removeButton.addEventListener("click", function () {
             const blockId = this.getAttribute("data-block-id");
             const parentElement = document.getElementById(blockId!);
             if (parentElement) {
@@ -379,67 +384,123 @@ class App {
         const targetButton = <HTMLInputElement>html.get(`#cheats_target`);
         targetButton.classList.remove("btn-secondary");
         targetButton.classList.add("btn-primary");
+        this.resetDefeatedCounter();
     }
 
-    private searchTarget() {
+    private updateDefeatedCounter() {
+        const counterElement = document.getElementById("defeated_counter");
+        if (counterElement) {
+            counterElement.textContent = this.defeatedEnemies.toString();
+        }
+    }
+
+    private resetDefeatedCounter() {
+        this.defeatedEnemies = 0;
+        this.updateDefeatedCounter();
+    }
+
+    private detectEnemy() {
+        const currentTime = new Date().getTime();
+        if (this.isAttacking) {
+            this.lastTargetDetectionTime = currentTime;
+            if (this.detectionTimeout) {
+                clearTimeout(this.detectionTimeout);
+            }
+            this.detectionTimeout = setTimeout(() => {
+                if (document.body.style.cursor.indexOf("curattack") === -1) {
+                    const checkTime = new Date().getTime();
+                    if (
+                        checkTime - (this.lastTargetDetectionTime ?? 0) >
+                        1000
+                    ) {
+                        this.defeatedEnemies++;
+                        this.updateDefeatedCounter();
+                        this.isAttacking = false;
+                    }
+                }
+            }, 1000);
+        } else {
+            this.lastTargetDetectionTime = currentTime;
+            this.isAttacking = true;
+        }
+    }
+
+    private async searchTarget() {
         const width = window.innerWidth;
         const height = window.innerHeight;
         const centerX = width / 2;
         const centerY = height / 2;
 
         let done = false;
-        let [x, x2, y, y2] = [0, 0, 0, 0];
+        let [x, x2, y, y2] = [centerX, centerX, centerY, centerY];
+        let radius = 0;
+        const maxRadius = width / 4; // Limit to 50% of the width
 
         const time = new Date().getTime();
+        let targetFound = false;
+        let targetFoundCounter = 0;
 
         return new Promise((resolve) => {
             this.input.cursorMutation = () => {
-                this.input.mouseClickEmmit(x, y);
-                done = true;
+                this.input.mouseClickEmmit(x, y); // Move to and attack target
+                targetFound = true; // Mark target as found
                 this.input.cursorMutation = new Function();
 
                 (<any>window).timeout = new Date().getTime() - time;
-
                 resolve(true);
             };
 
             (async () => {
-                this.ctx2D.clearRect(0, 0, width, height);
-                this.ctx2D.moveTo(centerX, centerY);
-                this.ctx2D.beginPath();
+                while (!done && this.targetAnimationRunning) {
+                    this.ctx2D.clearRect(0, 0, width, height); // Clear canvas each iteration
+                    this.ctx2D.moveTo(centerX, centerY);
+                    this.ctx2D.beginPath();
 
-                for (let angle = 0.01; angle < 72; angle += 0.01) {
-                    if (!this.targetAnimationRunning) break;
+                    radius += 10;
+                    if (radius > maxRadius) {
+                        radius = 10;
+                    }
 
-                    x2 = centerX + (10 + 5 * angle) * Math.cos(angle);
-                    y2 = centerY + (10 + 5 * angle) * Math.sin(angle);
+                    const steps = 36; // Number of points on the circle
+                    for (let i = 0; i < steps; i++) {
+                        const angle = (i * 2 * Math.PI) / steps;
+                        x2 = centerX + radius * Math.cos(angle);
+                        y2 = centerY + radius * Math.sin(angle);
 
-                    if (x2 < 0 || y2 < 0) continue;
-                    if (x2 > width || y2 > height) continue;
-                    if (Math.hypot(x2 - x, y2 - y) < 7) continue;
+                        if (x2 < 0 || y2 < 0 || x2 > width || y2 > height)
+                            continue;
 
-                    [x, y] = [x2, y2];
+                        this.ctx2D.arc(x2, y2, 3, 0, 2 * Math.PI);
+                        this.ctx2D.strokeStyle = "#fff";
+                        this.ctx2D.stroke();
 
-                    this.ctx2D.arc(x, y, 3, 0, 2 * Math.PI);
-                    this.ctx2D.strokeStyle = "#fff";
-                    this.ctx2D.stroke();
+                        [x, y] = [x2, y2];
 
-                    await this.input.mouseMoveEmmit(x, y);
+                        await this.input.mouseMoveEmmit(x, y);
 
-                    if (done) break;
+                        if (done) break;
+
+                        if (targetFound) {
+                            targetFoundCounter++;
+                            if (targetFoundCounter >= 2) {
+                                done = true; // Target found consecutively
+                                this.lastTargetDetectionTime =
+                                    new Date().getTime();
+                                break;
+                            }
+                        }
+                    }
+
+                    if (done) break; // Break loop when target is detected
+
+                    this.ctx2D.closePath();
+                    await timer(10); // Reduce the delay to speed up the animation
                 }
 
-                this.ctx2D.closePath();
-
+                this.ctx2D.clearRect(0, 0, width, height); // Ensure canvas is cleared after search
                 this.input.cursorMutation = new Function();
 
-                timer(1000).then(() =>
-                    this.ctx2D.clearRect(0, 0, width, height)
-                );
-
-                (<any>window).timeout = new Date().getTime() - time;
-
-                resolve(false);
+                resolve(done);
             })();
         });
     }

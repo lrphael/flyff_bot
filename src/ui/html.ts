@@ -30,7 +30,8 @@ export function getAll<T>(selectors: string): T {
 }
 
 const cheats_container_style = `position: absolute;
-width: fit-content;
+width: 430px;
+height: auto;
 top: 0px;
 right: 0;
 background-color: white;
@@ -42,11 +43,15 @@ transform: scale(0.65);
 transform-origin: top left;
 -moz-transform: scale(0.65);
 -moz-transform-origin: top left;
-border-radius: 6px;`;
+border-radius: 6px;
+box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);`;
 
 export const container = `<div id="cheats_container" style="${cheats_container_style}">
-    <div style="align-items: center; display: flex; flex-direction: column;">
-        <div id="cheats_collapse" class="collapse card card-body" style="margin-bottom: 5px;">
+    <div class="header" style="width: 100%; display: flex; justify-content: space-between; cursor: move;">
+        <span>Cheats v${version}</span>
+    </div>
+    <div style="align-items: center; display: flex; flex-direction: column; width: 100%;">
+        <div style="display: none; margin-bottom: 5px; width: 100%;" id="cheats_collapse">
             <div class="card card-body" style="margin-bottom: 10px;">
                 <div class="input-group">
                     <div class="form-check form-switch">  
@@ -55,15 +60,17 @@ export const container = `<div id="cheats_container" style="${cheats_container_s
                     </div>
                 </div>
             </div>
-            <div class="input-group" style="margin-bottom: 10px; justify-content: center;">
+            <div class="input-group" style="margin-bottom: 10px; justify-content: center; width: 100%;">
                 <span class="input-group-text">Add</span>
                 <button id="cheats_add_timeline" class="btn btn-primary" type="button">Timeline</button>
                 <button id="cheats_add_key" class="btn btn-primary" type="button">Key</button>
             </div>
         </div>
-        <button id="cheats_target" class="btn btn-primary" type="button" style="margin: 5px;">Target</button>
-        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#cheats_collapse" aria-expanded="false" aria-controls="collapse_cheats" style="margin: 5px;">Cheats</button>
-        <button id="cheats_info" class="btn btn-primary" type="button" style="margin: 5px;">Info</button>
+        <div style="display: flex; justify-content: space-around; width: 100%;">
+            <button id="cheats_target" class="btn btn-primary" type="button" style="margin: 5px;">Target</button>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#cheats_collapse" aria-expanded="false" aria-controls="collapse_cheats" style="margin: 5px;">Cheats</button>
+            <button id="cheats_info" class="btn btn-primary" type="button" style="margin: 5px;">Info</button>
+        </div>
         <div id="info_section" style="display:none; margin-top: 10px; text-align: left;">
             <h5>Explanation of Features:</h5>
             <ul>
@@ -85,6 +92,9 @@ export const container = `<div id="cheats_container" style="${cheats_container_s
                 <li><strong>Target:</strong> Searches for a target on the screen and simulates a click on it.</li>
             </ul>
         </div>
+        <div id="defeated_count" style="margin-top: 10px; text-align: left;">
+            <h5>Defeated Enemies: <span id="defeated_counter">0</span></h5>
+        </div>
         <a id="cheats_upgrade" name="v${version}" href="#" style="text-align: center;">v${version}</a>
     </div>
 </div>`;
@@ -100,6 +110,7 @@ export const collapseTimeline = (id: number) => `
         <button id="timeline_${id}_add" class="btn btn-primary" type="button">Key</button>
         <button id="timeline_${id}_add_click" class="btn btn-primary" type="button">Click</button>
         <input id="timeline_${id}_time" type="string" class="form-control" placeholder="interval" aria-label="Interval" style="width: 70px; padding: 3px;">
+        <button id="timeline_${id}_remove" type="button" class="btn btn-secondary" aria-label="Close" data-block-id="timeline_${id}">x</button>
     </div>
 </div>`;
 
@@ -112,6 +123,7 @@ export const input_key_group = (id: number) => `
         <input id="input_${id}_time" type="string" class="form-control" placeholder="interval" aria-label="Interval" style="width: 70px; padding: 3px;">
         <input id="input_${id}_cast" type="string" class="form-control" placeholder="casting" aria-label="Casting" style="width: 70px; padding: 3px;">
         <input id="input_${id}_key" type="string" class="form-control" placeholder="key" aria-label="Key" style="width: 55px; padding: 3px;">
+        <button id="input_key_${id}_remove" type="button" class="btn btn-secondary" aria-label="Close" data-block-id="input_${id}">x</button>
     </div>
 </div>
 `;

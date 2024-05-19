@@ -1,10 +1,10 @@
-const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
+const path = require("path");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
     mode: "production",
     entry: {
-        flyff: path.resolve(__dirname, "..", "src", "flyff.ts"),
+        main: path.resolve(__dirname, "..", "src", "main.ts"),
     },
     output: {
         path: path.join(__dirname, "../dist"),
@@ -22,17 +22,19 @@ module.exports = {
             },
             {
                 test: /\.(sass|less|css)$/,
-                use: ['style-loader', 'css-loader']
-            }
+                use: ["style-loader", "css-loader"],
+            },
         ],
     },
     plugins: [
         new CopyPlugin({
-            patterns: [{
-                from: ".",
-                to: ".",
-                context: "public"
-            }]
+            patterns: [
+                {
+                    from: ".",
+                    to: ".",
+                    context: "public",
+                },
+            ],
         }),
     ],
 };

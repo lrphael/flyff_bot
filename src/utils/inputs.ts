@@ -8,7 +8,7 @@ type KeyboardEvent = {
 };
 
 export default class Input {
-    public cursorMutation = new Function();
+    public cursorMutation: Function = () => {};
 
     private mainElm: HTMLElement;
     private pull: Array<
@@ -80,11 +80,7 @@ export default class Input {
     private initCursorObserver() {
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutationRecord) => {
-                if (
-                    document.body.style
-                        .getPropertyValue("cursor")
-                        .indexOf("curattack") !== -1
-                ) {
+                if (document.body.style.cursor.indexOf("curattack") !== -1) {
                     this.cursorMutation();
                 }
             });
