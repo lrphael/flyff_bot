@@ -46,12 +46,17 @@ transform-origin: top left;
 border-radius: 6px;
 box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);`;
 
-export const container = `<div id="cheats_container" style="${cheats_container_style}">
-    <div class="header" style="width: 100%; display: flex; justify-content: space-between; cursor: move;">
+export const container = `<div id="extension-container" style="${cheats_container_style}">
+    <div class="header" style="width: 100%; display: flex; justify-content: center; cursor: move;">
         <span>Cheats v${version}</span>
     </div>
     <div style="align-items: center; display: flex; flex-direction: column; width: 100%;">
-        <div style="display: none; margin-bottom: 5px; width: 100%;" id="cheats_collapse">
+        <div style="display: flex; justify-content: space-around; width: 100%;">
+            <button id="btn-target" class="btn btn-primary" type="button" style="margin: 5px;">Target</button>
+            <button id="btn-actions" class="btn btn-primary" type="button" style="margin: 5px;">Actions</button>
+            <button id="btn-info" class="btn btn-primary" type="button" style="margin: 5px;">Info</button>
+        </div>
+        <div style="display: none; margin-bottom: 5px; width: 100%;" id="actions-collapse">
             <div class="card card-body" style="margin-bottom: 10px;">
                 <div class="input-group">
                     <div class="form-check form-switch">  
@@ -62,16 +67,11 @@ export const container = `<div id="cheats_container" style="${cheats_container_s
             </div>
             <div class="input-group" style="margin-bottom: 10px; justify-content: center; width: 100%;">
                 <span class="input-group-text">Add</span>
-                <button id="cheats_add_timeline" class="btn btn-primary" type="button">Timeline</button>
-                <button id="cheats_add_key" class="btn btn-primary" type="button">Key</button>
+                <button id="cheats-add-timeline" class="btn btn-primary" type="button">Timeline</button>
+                <button id="cheats-add-key" class="btn btn-primary" type="button">Key</button>
             </div>
         </div>
-        <div style="display: flex; justify-content: space-around; width: 100%;">
-            <button id="cheats_target" class="btn btn-primary" type="button" style="margin: 5px;">Target</button>
-            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#cheats_collapse" aria-expanded="false" aria-controls="collapse_cheats" style="margin: 5px;">Cheats</button>
-            <button id="cheats_info" class="btn btn-primary" type="button" style="margin: 5px;">Info</button>
-        </div>
-        <div id="info_section" style="display:none; margin-top: 10px; text-align: left;">
+        <div id="info-section" style="display:none; margin-top: 10px; text-align: left;">
             <h5>Explanation of Features:</h5>
             <ul>
                 <li><strong>Key:</strong> Adds a new key entry with the following options:

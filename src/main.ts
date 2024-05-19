@@ -2,8 +2,6 @@ import "bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import { detectEnemy } from "./detector/detector";
 import { setupEventListeners } from "./events/events";
-import { createKey } from "./key";
-import { createTimer } from "./timeline";
 import * as html from "./ui/html";
 import { initUI } from "./ui/ui";
 import Input from "./utils/inputs";
@@ -56,14 +54,6 @@ class App {
     public resetDefeatedCounter() {
         this.defeatedEnemies = 0;
         this.updateDefeatedCounter();
-    }
-
-    public createTimer() {
-        createTimer(this);
-    }
-
-    public createKey() {
-        createKey(this);
     }
 
     public onCheckboxChange(event: Event) {

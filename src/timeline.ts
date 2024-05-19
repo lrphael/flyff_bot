@@ -1,28 +1,28 @@
 import * as html from "./ui/html";
 
 export function createTimer(app: any) {
-    const timer_counter_save = app.timer_counter++;
+    const timerCounterSave = app.timer_counter++;
 
-    const cheats_container = <HTMLElement>html.get(`#cheats_collapse`);
-    const timer = html.toElement(html.collapseTimeline(timer_counter_save));
-    cheats_container?.appendChild(timer);
+    const actionsContainer = <HTMLElement>html.get(`#actions-collapse`);
+    const timer = html.toElement(html.collapseTimeline(timerCounterSave));
+    actionsContainer?.appendChild(timer);
 
     const button = <HTMLInputElement>(
-        html.get(`#timeline_${timer_counter_save}_add`)
+        html.get(`#timeline_${timerCounterSave}_add`)
     );
     button.addEventListener("pointerdown", () =>
-        app.createTimerKey(timer_counter_save)
+        createTimerKey(app, timerCounterSave)
     );
 
     const button2 = <HTMLInputElement>(
-        html.get(`#timeline_${timer_counter_save}_add_click`)
+        html.get(`#timeline_${timerCounterSave}_add_click`)
     );
     button2.addEventListener("pointerdown", () =>
-        app.createClickKey(timer_counter_save)
+        createClickKey(app, timerCounterSave)
     );
 
     const removeButton = <HTMLInputElement>(
-        html.get(`#timeline_${timer_counter_save}_remove`)
+        html.get(`#timeline_${timerCounterSave}_remove`)
     );
     removeButton.addEventListener("click", function () {
         const parentElement = this.closest(`[id^="input_timeline_"]`);
@@ -35,12 +35,12 @@ export function createTimer(app: any) {
         typeof setInterval
     >;
     const block = <HTMLInputElement>(
-        html.get(`#timeline_${timer_counter_save}_on`)
+        html.get(`#timeline_${timerCounterSave}_on`)
     );
     block?.addEventListener("change", (event: Event) => {
         const target = event.target as HTMLInputElement;
 
-        const id = timer_counter_save;
+        const id = timerCounterSave;
         const duration = html.getInput(`timeline_${id}_time`)!.value;
         if (Number(duration) <= 0) return (target.checked = false);
 
@@ -85,17 +85,17 @@ export function createTimer(app: any) {
     });
 }
 
-export function createTimerKey(app: any, timer_counter_save: number) {
-    const key_counter_save = app.timer_key_counter.get(timer_counter_save) || 0;
-    app.timer_key_counter.set(timer_counter_save, key_counter_save + 1);
+export function createTimerKey(app: any, timerCounterSave: number) {
+    const key_counter_save = app.timer_key_counter.get(timerCounterSave) || 0;
+    app.timer_key_counter.set(timerCounterSave, key_counter_save + 1);
 
     const cheats_container = <HTMLElement>(
-        html.get(`#timeline_${timer_counter_save}_collapse`)
+        html.get(`#timeline_${timerCounterSave}_collapse`)
     );
     const timer = html.toElement(
         html.input_timeline_group(
-            `timeline_${timer_counter_save}_timer`,
-            `timeline_${timer_counter_save}_timer_${key_counter_save}`
+            `timeline_${timerCounterSave}_timer`,
+            `timeline_${timerCounterSave}_timer_${key_counter_save}`
         )
     );
 
@@ -103,7 +103,7 @@ export function createTimerKey(app: any, timer_counter_save: number) {
 
     const button = <HTMLInputElement>(
         html.get(
-            `#input_timeline_${timer_counter_save}_timer_${key_counter_save}_remove`
+            `#input_timeline_${timerCounterSave}_timer_${key_counter_save}_remove`
         )
     );
     button.addEventListener("pointerdown", function (event: Event) {
@@ -113,17 +113,17 @@ export function createTimerKey(app: any, timer_counter_save: number) {
     });
 }
 
-export function createClickKey(app: any, timer_counter_save: number) {
-    const key_counter_save = app.timer_key_counter.get(timer_counter_save) || 0;
-    app.timer_key_counter.set(timer_counter_save, key_counter_save + 1);
+export function createClickKey(app: any, timerCounterSave: number) {
+    const key_counter_save = app.timer_key_counter.get(timerCounterSave) || 0;
+    app.timer_key_counter.set(timerCounterSave, key_counter_save + 1);
 
     const cheats_container = <HTMLElement>(
-        html.get(`#timeline_${timer_counter_save}_collapse`)
+        html.get(`#timeline_${timerCounterSave}_collapse`)
     );
     const timer = html.toElement(
         html.click_timeline_group(
-            `timeline_${timer_counter_save}_timer`,
-            `timeline_${timer_counter_save}_timer_${key_counter_save}`
+            `timeline_${timerCounterSave}_timer`,
+            `timeline_${timerCounterSave}_timer_${key_counter_save}`
         )
     );
 
@@ -131,7 +131,7 @@ export function createClickKey(app: any, timer_counter_save: number) {
 
     const button = <HTMLInputElement>(
         html.get(
-            `#input_timeline_${timer_counter_save}_timer_${key_counter_save}_remove`
+            `#input_timeline_${timerCounterSave}_timer_${key_counter_save}_remove`
         )
     );
     button.addEventListener("pointerdown", function (event: Event) {
@@ -142,7 +142,7 @@ export function createClickKey(app: any, timer_counter_save: number) {
 
     const button2 = <HTMLInputElement>(
         html.get(
-            `#input_timeline_${timer_counter_save}_timer_${key_counter_save}_pos`
+            `#input_timeline_${timerCounterSave}_timer_${key_counter_save}_pos`
         )
     );
 
@@ -154,7 +154,7 @@ export function createClickKey(app: any, timer_counter_save: number) {
         const canvas = app.canvas;
 
         const id = (e: string) =>
-            `input_timeline_${timer_counter_save}_timer_${key_counter_save}_${e}`;
+            `input_timeline_${timerCounterSave}_timer_${key_counter_save}_${e}`;
         const input_x = html.getInput(id("x"))!;
         const input_y = html.getInput(id("y"))!;
 

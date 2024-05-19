@@ -1,3 +1,5 @@
+import { createKey } from "../key";
+import { createTimer } from "../timeline";
 import * as html from "../ui/html";
 
 export function setupEventListeners(app: any) {
@@ -5,7 +7,7 @@ export function setupEventListeners(app: any) {
         typeof setInterval
     >;
 
-    const follow = <HTMLInputElement>html.get(`#input_follow`);
+    const follow = <HTMLInputElement>html.get("#input_follow");
     follow.addEventListener("change", (event: Event) => {
         const target = event.target as HTMLInputElement;
         const enabled = target.checked;
@@ -19,15 +21,19 @@ export function setupEventListeners(app: any) {
         }, 5000);
     });
 
-    const button = <HTMLInputElement>html.get(`#cheats_add_timeline`);
-    button.addEventListener("pointerdown", () => app.createTimer());
+    const btnAddTimeline = <HTMLInputElement>html.get("#cheats-add-timeline");
+    btnAddTimeline.addEventListener("pointerdown", () => {
+        createTimer(app);
+    });
 
-    const button2 = <HTMLInputElement>html.get(`#cheats_add_key`);
-    button2.addEventListener("pointerdown", () => app.createKey());
+    const btnAddKey = <HTMLInputElement>html.get("#cheats-add-key");
+    btnAddKey.addEventListener("pointerdown", () => {
+        createKey(app);
+    });
 
-    const infoButton = <HTMLInputElement>html.get(`#cheats_info`);
+    const infoButton = <HTMLInputElement>html.get("#btn-info");
     infoButton.addEventListener("pointerdown", () => {
-        const infoSection = document.getElementById("info_section");
+        const infoSection = document.getElementById("info-section");
         if (infoSection) {
             if (
                 infoSection.style.display === "none" ||
@@ -40,7 +46,7 @@ export function setupEventListeners(app: any) {
         }
     });
 
-    const targetButton = <HTMLInputElement>html.get(`#cheats_target`);
+    const targetButton = <HTMLInputElement>html.get("#btn-target");
     targetButton.addEventListener("pointerdown", () => {
         if (app.targetAnimationRunning) {
             app.stopTarget();
@@ -55,11 +61,9 @@ export function setupEventListeners(app: any) {
         }
     });
 
-    const cheatsButton = <HTMLInputElement>(
-        html.get(`[data-bs-target="#cheats_collapse"]`)
-    );
-    cheatsButton.addEventListener("click", () => {
-        const cheatsCollapse = document.getElementById("cheats_collapse");
+    const actionsButton = <HTMLInputElement>html.get("#btn-actions");
+    actionsButton.addEventListener("pointerdown", () => {
+        const cheatsCollapse = document.getElementById("actions-collapse");
         if (cheatsCollapse) {
             if (cheatsCollapse.classList.contains("show")) {
                 cheatsCollapse.classList.remove("show");

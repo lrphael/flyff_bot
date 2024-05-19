@@ -120,3 +120,23 @@ async function searchTarget(app: any) {
         })();
     });
 }
+
+export async function attackTarget(
+    app: any,
+    target: HTMLInputElement,
+    data: { count: number; key: string; cast: number }
+) {
+    if (!app.targetAnimationRunning) return;
+    target.classList.remove("btn-primary");
+    target.classList.add("btn-secondary");
+
+    if (await searchTarget(app)) {
+        await timer(500);
+        for (let i = 0; i < data.count; i++) {
+            await app.input.send({ cast: data.cast, key: data.key });
+        }
+    }
+
+    target.classList.remove("btn-secondary");
+    target.classList.add("btn-primary");
+}
