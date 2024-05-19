@@ -1,3 +1,4 @@
+import { startTarget, stopTarget } from "../detector/detector";
 import { createKey } from "../key";
 import { createTimer } from "../timeline";
 import * as html from "../ui/html";
@@ -49,12 +50,12 @@ export function setupEventListeners(app: any) {
     const targetButton = <HTMLInputElement>html.get("#btn-target");
     targetButton.addEventListener("pointerdown", () => {
         if (app.targetAnimationRunning) {
-            app.stopTarget();
+            stopTarget(app);
             targetButton.innerText = "Target";
             targetButton.classList.remove("btn-secondary");
             targetButton.classList.add("btn-primary");
         } else {
-            app.startTarget();
+            startTarget(app);
             targetButton.innerText = "Stop Target";
             targetButton.classList.remove("btn-primary");
             targetButton.classList.add("btn-secondary");
